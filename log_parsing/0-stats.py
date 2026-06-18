@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     try:
         for line in sys.stdin:
-            line = line.rstrip('\n')
+            line = line.rstrip('\r\n')
             match = re.match(pattern, line)
 
             if not match:
