@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Module for log parsing"""
 import sys
+import re
 
 
 def print_stats(total_size, status_codes):
@@ -15,24 +16,19 @@ if __name__ == "__main__":
     status_codes = {}
     valid_codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
     line_count = 0
+    pattern = (r'^\S+ - \[.+\] "GET /projects/260 HTTP/1\.1" '
+               r'(\d+) (\d+)$')
 
     try:
         for line in sys.stdin:
             line = line.strip()
-            parts = line.split()
+            match = re.match(pattern, line)
 
-            if len(parts) < 7:
+            if not match:
                 continue
 
-            try:
-                status_code = parts[-2]
-                file_size = int(parts[-1])
-            except (ValueError, IndexError):
-                continue
-
-            if (parts[5] != '"GET' or parts[6] != "/projects/260"
-                    or parts[7] != 'HTTP/1.1"'):
-                continue
+            status_code = match.group(1)
+            file_size = int(match.group(2))
 
             total_size += file_size
             if status_code in valid_codes:
