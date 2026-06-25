@@ -18,6 +18,10 @@ request(url, (error, response, body) => {
       return;
     }
     request(characters[index], (err, res, charBody) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
       console.log(JSON.parse(charBody).name);
       printCharacter(index + 1);
     });
